@@ -1,18 +1,32 @@
 package com.ecommereceApp.product_service.controller;
 
 import com.ecommereceApp.product_service.dto.ProductRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ecommereceApp.product_service.dto.ProductResponse;
+import com.ecommereceApp.product_service.service.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
 
-    @GetMapping("/pr")
-    //@RequestBody ProductRequest productRequest
-    public String createProduct(){
-        return "Hello from server";
+    private final ProductService productService;
+
+    ProductController(ProductService productService){
+        this.productService=productService;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProduct(@RequestBody ProductRequest productRequest){
+        productService.createProduct(productRequest);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getAllProduct(){
+        return productService.getAllProducts();
     }
 }
