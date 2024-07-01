@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name="order")
+@Table(name="t_order")
 @Getter
 @Setter
 @NoArgsConstructor

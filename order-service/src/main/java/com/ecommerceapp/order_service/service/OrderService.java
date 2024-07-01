@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 public class OrderService {
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     OrderService(OrderRepository orderRepository){
         this.orderRepository=orderRepository;
     }
