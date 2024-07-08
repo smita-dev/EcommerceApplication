@@ -22,8 +22,8 @@ public class InventoryServiceApplication {
 			inventory.setQuantity(100);
 
 			Inventory inventory1=new Inventory();
-			inventory1.setSkuCode("Iphone_14");
-			inventory1.setQuantity(12);
+			inventory1.setSkuCode("Iphone_15");
+			inventory1.setQuantity(0);
 
 			inventoryRepository.save(inventory);
 			inventoryRepository.save(inventory1);
