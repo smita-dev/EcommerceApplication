@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.ecommerceapp.order_service.repository.OrderRepository;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,8 +17,11 @@ import java.util.UUID;
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    OrderService(OrderRepository orderRepository){
+    private final WebClient webClient;
+
+    OrderService(OrderRepository orderRepository,WebClient webClient){
         this.orderRepository=orderRepository;
+        this.webClient=webClient;
     }
     public void placeOrder(OrderRequest orderRequest){
         Order order=new Order();
@@ -26,7 +30,18 @@ public class OrderService {
         ).toList();
         order.setOrderLineItemList(orderLineItems);
 
-        orderRepository.save(order);
+        //call inventory service to check if product is in stock or not
+        //and place the order if product is available
+        Boolean responseFromInventoryService=webClient.get().uri("http://localhost:8082/api/inventory")
+                        .retrieve()
+                                .bodyToMono(Boolean.class)
+                                        .block();
+        if(Boolean.TRUE.equals(responseFromInventoryService)){
+            orderRepository.save(order);
+        }else{
+            throw new IllegalArgumentException("Product is not available. Please try again.");
+        }
+
     }
 
     private OrderLineItem mapToDto(OrderLineItemsDto orderLineItemDto) {
